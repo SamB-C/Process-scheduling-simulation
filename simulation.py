@@ -417,16 +417,17 @@ class OperatingSystem:
             self.check_running_process()
             self.check_blocked_processes()
 
+            # Generate graphics
             y_pos = 5
             ready_queue_surface = self.pygame_create_ready_queue_surface()
             screen.blit(ready_queue_surface, (5, y_pos))
             y_pos += ready_queue_surface.get_height() + 8
             cpu_surface = self.pygame_create_cpu_surface()
             screen.blit(cpu_surface, (20, y_pos))
-            y_pos += cpu_surface.get_height() + 1
-            for index, process in enumerate(self.finished_processes):
-                screen.blit(process.pygame_process_surface.surface, (index*(
-                    Process.PYGAME_SURFACE_WIDTH + 1) + 1, y_pos))
+            y_pos += cpu_surface.get_height() + 8
+            finished_processes_surface = self.pygame_create_finished_processes_surface()
+            screen.blit(finished_processes_surface, (5, y_pos))
+            y_pos += finished_processes_surface.get_height() + 8
 
             # Render pygame stuff
             pygame.display.update()
