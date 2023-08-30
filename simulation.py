@@ -365,12 +365,12 @@ class OperatingSystem:
         title_height = title.get_height()
         title_width = title.get_width()
         # Calculate dimensions
-        number_finished_processes = len(self.blocked_processes)
-        number_of_gaps = number_finished_processes - 1
+        number_blocked_processes = len(self.blocked_processes)
+        number_of_gaps = number_blocked_processes - 1
         if number_of_gaps < 0:
             number_of_gaps = 0
         width = BORDER_WIDTH + INSET + \
-            (number_finished_processes * Process.PYGAME_SURFACE_WIDTH) + \
+            (number_blocked_processes * Process.PYGAME_SURFACE_WIDTH) + \
             (GAP * number_of_gaps) + INSET + BORDER_WIDTH
         minimum_width = BORDER_WIDTH + INSET + title_width + INSET + BORDER_WIDTH
         if width < minimum_width:
@@ -392,6 +392,10 @@ class OperatingSystem:
             (white_inside_dimensions[0] - title_width) / 2, y_pos)
         white_inside.blit(title, title_position)
         y_pos += title_height + GAP
+        width_blocked_processes = (
+            number_blocked_processes * Process.PYGAME_SURFACE_WIDTH) + (GAP * number_of_gaps)
+        if width_blocked_processes < title_width:
+            x_pos += (title_width - width_blocked_processes) / 2
         for process in self.blocked_processes:
             process: Process
             white_inside.blit(
