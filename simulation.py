@@ -297,7 +297,7 @@ class OperatingSystem:
                         available_memory_result_text_position)
         return background
 
-    def create_blank_process(self) -> pygame.Surface:
+    def pygame_create_blank_process(self) -> pygame.Surface:
         '''Creates a rectangle the size of a process'''
         background = pygame.Surface(
             (Process.PYGAME_SURFACE_WIDTH, Process.PYGAME_SURFACE_HEIGHT))
@@ -336,7 +336,7 @@ class OperatingSystem:
                           title.get_width()) / 2, y_pos)
         white_inside.blit(title, title_position)
         y_pos += title.get_height() + GAP
-        running_process_slot = self.create_blank_process()
+        running_process_slot = self.pygame_create_blank_process()
         if self.running_process:
             running_process_slot = self.running_process[0].pygame_process_surface.surface
         white_inside.blit(running_process_slot, (x_pos, y_pos))
