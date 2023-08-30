@@ -66,7 +66,7 @@ class OperatingSystem:
         '''Moves the next process from ready to running. Sets the time that the process will be preempted at.'''
         self.admit_processes()
         if not self.unfinished_processes:
-            # Raise error as there are no processes left to run
+            # Returns as there are no processes left to run
             return
         if self.number_ready_processes == 0:
             # The only unfinished processes are currently in the blocked queue
