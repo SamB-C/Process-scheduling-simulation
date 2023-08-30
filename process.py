@@ -209,10 +209,6 @@ class Process:
     def time_to_complete(self) -> timedelta:
         return self.__time_to_complete
 
-    '''@time_to_complete.setter
-    def time_to_complete(self, new_time_to_complete):
-        self.__time_to_complete = new_time_to_complete'''
-
     @property
     def status(self) -> ProcessStatus:
         return self.__status
