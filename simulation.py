@@ -478,7 +478,7 @@ class OperatingSystem:
 
     async def run(self):
         '''The run cycle of the os process management'''
-        screen = pygame.display.set_mode((1500, 900))
+        screen = pygame.display.set_mode((1440, 850))
         clock = pygame.time.Clock()
         pygame.display.set_caption('Process Scheduler Simulator')
         # Manual exit of the loop via x on graphics
