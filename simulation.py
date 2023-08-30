@@ -352,7 +352,7 @@ class OperatingSystem:
         background.blit(white_inside, (BORDER_WIDTH, BORDER_WIDTH))
         return background
 
-    def pygame_create_blocked_processes_surface(self) -> pygame.Surface:
+    def pygame_create_process_queue_surface(self, queue: list[Process], queue_name: str) -> pygame.Surface:
         '''Creates the surface for the blocked processes'''
         # Set constants
         GAP = 4
@@ -361,16 +361,16 @@ class OperatingSystem:
         FONT_SIZE = 40
         # Create text
         font = pygame.font.Font(None, FONT_SIZE)
-        title = font.render('Blocked Processes', True, 'Black')
+        title = font.render(queue_name, True, 'Black')
         title_height = title.get_height()
         title_width = title.get_width()
         # Calculate dimensions
-        number_blocked_processes = len(self.blocked_processes)
-        number_of_gaps = number_blocked_processes - 1
+        number_of_processes = len(queue)
+        number_of_gaps = number_of_processes - 1
         if number_of_gaps < 0:
             number_of_gaps = 0
         width = BORDER_WIDTH + INSET + \
-            (number_blocked_processes * Process.PYGAME_SURFACE_WIDTH) + \
+            (number_of_processes * Process.PYGAME_SURFACE_WIDTH) + \
             (GAP * number_of_gaps) + INSET + BORDER_WIDTH
         minimum_width = BORDER_WIDTH + INSET + title_width + INSET + BORDER_WIDTH
         if width < minimum_width:
@@ -393,59 +393,10 @@ class OperatingSystem:
         white_inside.blit(title, title_position)
         y_pos += title_height + GAP
         width_blocked_processes = (
-            number_blocked_processes * Process.PYGAME_SURFACE_WIDTH) + (GAP * number_of_gaps)
+            number_of_processes * Process.PYGAME_SURFACE_WIDTH) + (GAP * number_of_gaps)
         if width_blocked_processes < title_width:
             x_pos += (title_width - width_blocked_processes) / 2
-        for process in self.blocked_processes:
-            process: Process
-            white_inside.blit(
-                process.pygame_process_surface.surface, (x_pos, y_pos))
-            x_pos += Process.PYGAME_SURFACE_WIDTH + GAP
-        # Combine
-        background.blit(white_inside, (BORDER_WIDTH, BORDER_WIDTH))
-        return background
-
-    def pygame_create_finished_processes_surface(self) -> pygame.Surface:
-        '''Creates the surface for the finished processes'''
-        # Set constants
-        GAP = 4
-        INSET = 5
-        BORDER_WIDTH = 2
-        FONT_SIZE = 40
-        # Create text
-        font = pygame.font.Font(None, FONT_SIZE)
-        title = font.render('Finished Processes', True, 'Black')
-        title_height = title.get_height()
-        title_width = title.get_width()
-        # Calculate dimensions
-        number_finished_processes = len(self.finished_processes)
-        number_of_gaps = number_finished_processes - 1
-        if number_of_gaps < 0:
-            number_of_gaps = 0
-        width = BORDER_WIDTH + INSET + \
-            (number_finished_processes * Process.PYGAME_SURFACE_WIDTH) + \
-            (GAP * number_of_gaps) + INSET + BORDER_WIDTH
-        minimum_width = BORDER_WIDTH + INSET + title_width + INSET + BORDER_WIDTH
-        if width < minimum_width:
-            width = minimum_width
-        height = BORDER_WIDTH + INSET + title_height + GAP + \
-            Process.PYGAME_SURFACE_HEIGHT + INSET + BORDER_WIDTH
-        # Create background
-        background = pygame.Surface((width, height))
-        background.fill('Black')
-        # Create white inside
-        white_inside_dimensions = (
-            width - (BORDER_WIDTH * 2), height - (BORDER_WIDTH * 2))
-        white_inside = pygame.Surface(white_inside_dimensions)
-        white_inside.fill('White')
-        # Add contents
-        x_pos = INSET
-        y_pos = INSET
-        title_position = (
-            (white_inside_dimensions[0] - title_width) / 2, y_pos)
-        white_inside.blit(title, title_position)
-        y_pos += title_height + GAP
-        for process in self.finished_processes:
+        for process in queue:
             process: Process
             white_inside.blit(
                 process.pygame_process_surface.surface, (x_pos, y_pos))
@@ -468,7 +419,8 @@ class OperatingSystem:
         screen.blit(cpu_surface, (20, y_pos))
         # Add blocked processes
         x_pos += cpu_surface.get_width() + 40
-        blocked_processes_surface = self.pygame_create_blocked_processes_surface()
+        blocked_processes_surface = self.pygame_create_process_queue_surface(
+            self.blocked_processes, 'Blocked Processes')
         centring_adjustment = (cpu_surface.get_height(
         ) - blocked_processes_surface.get_height()) / 2
         screen.blit(blocked_processes_surface,
@@ -476,7 +428,8 @@ class OperatingSystem:
         # Add finished_processess
         x_pos = 5
         y_pos += cpu_surface.get_height() + 8
-        finished_processes_surface = self.pygame_create_finished_processes_surface()
+        finished_processes_surface = self.pygame_create_process_queue_surface(
+            self.finished_processes, 'Finished Processes')
         screen.blit(finished_processes_surface, (x_pos, y_pos))
         y_pos += finished_processes_surface.get_height() + 8
 
