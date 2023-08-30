@@ -109,6 +109,9 @@ class OperatingSystem:
         # Runs a process if none are currently running
         if len(self.running_process) < 1:
             self.run_process()
+        if len(self.running_process) < 1:
+            # All unfinished processes are currently blocked so there is no current process
+            return
 
         # Move process to correct queue
         current_process = self.running_process.pop()
@@ -165,10 +168,11 @@ class OperatingSystem:
     def check_blocked_processes(self):
         for process_index, process in enumerate(self.blocked_processes):
             process: Process
-            blocking_preemptions: list[BlockingPreemptionWithPosition] = process.blocking_preemptions
-            for blocking_preemption_index, preemption in blocking_preemptions:
-                blocking_preemption_index: int
-                preemption: Preemption
+            blocking_preemptions: list[dict[str: int,
+                                            str: BlockingPreemptionWithPosition]] = process.blocking_preemptions
+            for blocking_preemption in blocking_preemptions:
+                blocking_preemption_index: int = blocking_preemption['index']
+                preemption: Preemption = blocking_preemption['preemption']
                 if not preemption.still_blocked:
                     removed_process: Process = self.blocked_processes.pop(
                         process_index)

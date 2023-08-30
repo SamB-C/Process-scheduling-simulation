@@ -76,7 +76,7 @@ class Preemption:
         self.__preempt_reason = reason
         self.__time_of_preemption = time_of_preemption
         # The function that determines how long the process has to wait until it is no longer blocked
-        self.__blocked_function = blocked_function
+        self.__blocked_generator = blocked_function()
         self.__is_complete: bool = False
 
     @property
@@ -89,8 +89,8 @@ class Preemption:
 
     @property
     def still_blocked(self) -> bool:
-        '''Runs the function provided that tells the os whether the process can be unblocked. `True` means the process must stay blocked.'''
-        return self.__blocked_function()
+        '''Runs the generator provided that tells the os whether the process can be unblocked. `True` means the process must stay blocked.'''
+        return next(self.__blocked_generator)
 
     @property
     def is_complete(self) -> bool:
@@ -160,6 +160,7 @@ class Process:
     def remove_preemption(self, index: int):
         '''Removes preemption from `self.__premptions` at index given.'''
         self.__preemptions.pop(index)
+        self.__cpu_time_over = False
 
     def __repr__(self):
         return self.__identifier
