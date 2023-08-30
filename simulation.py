@@ -405,7 +405,7 @@ class OperatingSystem:
         background.blit(white_inside, (BORDER_WIDTH, BORDER_WIDTH))
         return background
 
-    def create_graphics(self, screen: pygame.Surface) -> None:
+    def pygame_create_graphics(self, screen: pygame.Surface) -> None:
         '''Add all the components of the graphcis to the screen surface'''
         # Add ready queue
         y_pos = 5
@@ -454,7 +454,7 @@ class OperatingSystem:
             self.check_blocked_processes()
 
             # Generate grpahics
-            self.create_graphics(screen)
+            self.pygame_create_graphics(screen)
 
             # Render pygame stuff
             pygame.display.update()
