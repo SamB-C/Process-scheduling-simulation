@@ -40,10 +40,10 @@ class OperatingSystem:
         # Assign os settings
         self.__round_robin_timing = round_robin_timing
 
-    def create_new_process(self, time_to_complete: timedelta, memory_required: Memory, priority: ProcessPriority):
-        '''Creates a new process and adds it to `self.new_process_queue`'''
-        self.new_process_queue.append(
-            Process(time_to_complete, memory_required, priority))
+    def add_new_processes(self, *new_processes: Process) -> None:
+        '''Adds a variable number of processes to `self.new_process_queue`'''
+        for process in new_processes:
+            self.new_process_queue.append(process)
 
     def admit_processes(self):
         '''Admits as many processes from `self.new_process_queue` to the `self.ready_queue` as there is space in memory'''
